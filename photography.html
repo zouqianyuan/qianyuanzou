@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photography | Qianyuan Zou</title>
+  <meta name="description" content="Photography portfolio by Qianyuan Zou." />
+  <style>
+    :root {
+      --bg: #1a1d21;
+      --bg-soft: #20242a;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #eef2f6;
+      --muted: #a8b0ba;
+      --accent: #79a8ff;
+      --accent-soft: rgba(121, 168, 255, 0.15);
+      --max-width: 1160px;
+      --radius: 20px;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #2a3138 0%, var(--bg) 34%, #16191d 100%);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background:
+        radial-gradient(circle at 18% 18%, rgba(121, 168, 255, 0.10), transparent 30%),
+        radial-gradient(circle at 82% 12%, rgba(255, 255, 255, 0.05), transparent 24%),
+        radial-gradient(circle at 55% 75%, rgba(121, 168, 255, 0.06), transparent 34%);
+      filter: blur(10px);
+      opacity: 0.95;
+    }
+
+    body::after {
+      background: radial-gradient(circle at center, transparent 52%, rgba(0, 0, 0, 0.28) 100%);
+      opacity: 0.9;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.95;
+    }
+
+    .site-shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: rgba(26, 29, 33, 0.7);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .nav-wrap.scrolled {
+      border-color: var(--line);
+      background: rgba(26, 29, 33, 0.84);
+    }
+
+    .nav {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      gap: 24px;
+    }
+
+    .brand {
+      font-size: 0.98rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      position: relative;
+      padding: 6px 0;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.22s ease;
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 88px 0;
+      position: relative;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 2vw + 1rem, 3rem);
+      line-height: 1.15;
+      margin: 0 0 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      max-width: 740px;
+      margin: 0 0 32px;
+      font-size: 1.02rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 4 / 5;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03)),
+        #242a31;
+      box-shadow: var(--shadow);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.04);
+    }
+
+    .footer {
+      padding: 30px 0 42px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      transition-delay: 0.05s;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1024px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 14px 0;
+      }
+
+      .nav-links {
+        gap: 14px;
+        font-size: 0.9rem;
+      }
+
+      .section {
+        padding: 72px 0;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <div class="site-shell">
+    <div class="nav-wrap" id="navWrap">
+      <nav class="nav">
+        <a href="index.html" class="brand">Qianyuan Zou</a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="research.html">Research</a>
+          <a href="publications.html">Publications</a>
+          <a href="projects.html">Projects</a>
+          <a href="photography.html">Photography</a>
+          <a href="cv.html">CV</a>
+          <a href="index.html#contact">Contact</a>
+        </div>
+      </nav>
+    </div>
+
+    <main>
+      <section class="section">
+        <div class="container">
+          <div class="reveal">
+            <div class="eyebrow">Photography</div>
+            <h1 class="section-title">Observing light, space, and atmosphere</h1>
+            <p class="section-intro">
+              Photography is a parallel visual practice that informs how I think about framing, materiality, spatial attention, and how we perceive and represent physical spaces.
+            </p>
+          </div>
+
+          <div class="gallery-grid">
+            <a class="gallery-item reveal">
+              <img src="images/hai.JPG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/kid.JPG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/bianjing.JPG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/xingkong.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/shan.PNG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/jiamifeng.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/1.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/2.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/4.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/5.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal">
+              <img src="images/6.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        © <span id="year"></span> Qianyuan Zou · Built for GitHub Pages
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal for full-size images -->
+  <div id="image-modal" style="display: block; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); overflow: auto; opacity: 0; visibility: hidden; transition: opacity 0.3s ease;">
+    <span class="close" style="position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+    <span class="prev" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&lt;</span>
+    <span class="next" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&gt;</span>
+    <img id="modal-image" style="display: block; width: auto; height: auto; max-width: 90vw; max-height: 90vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: opacity 0.3s ease;">
+  </div>
+
+  <script>
+    const navWrap = document.getElementById('navWrap');
+    const yearEl = document.getElementById('year');
+    yearEl.textContent = new Date().getFullYear();
+
+    window.addEventListener('scroll', () => {
+      navWrap.classList.toggle('scrolled', window.scrollY > 12);
+    });
+
+    const revealItems = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.16 }
+    );
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    const particleCount = 110;
+    const particles = [];
+    const pointer = { x: 0, y: 0, active: false };
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
+      height = canvas.height = window.innerHeight * Math.min(window.devicePixelRatio || 1, 2);
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(Math.min(window.devicePixelRatio || 1, 2), Math.min(window.devicePixelRatio || 1, 2));
+    }
+
+    function makeParticle() {
+      const depth = Math.random() * 0.9 + 0.35;
+      return {
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 0.22 * depth,
+        vy: (Math.random() - 0.5) * 0.22 * depth,
+        size: (Math.random() * 2 + 0.9) * depth,
+        depth,
+        alpha: Math.random() * 0.22 + 0.18,
+        twinkle: Math.random() * Math.PI * 2,
+      };
+    }
+
+    function initParticles() {
+      particles.length = 0;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(makeParticle());
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      if (pointer.active) {
+        const glow = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 220);
+        glow.addColorStop(0, 'rgba(121, 168, 255, 0.12)');
+        glow.addColorStop(0.45, 'rgba(121, 168, 255, 0.05)');
+        glow.addColorStop(1, 'rgba(121, 168, 255, 0)');
+        ctx.beginPath();
+        ctx.fillStyle = glow;
+        ctx.arc(pointer.x, pointer.y, 220, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (const p of particles) {
+        p.twinkle += 0.012 * p.depth;
+
+        if (pointer.active) {
+          const dx = pointer.x - p.x;
+          const dy = pointer.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const fieldX = (pointer.x - window.innerWidth / 2) / window.innerWidth;
+          const fieldY = (pointer.y - window.innerHeight / 2) / window.innerHeight;
+          p.vx += fieldX * 0.006 * p.depth;
+          p.vy += fieldY * 0.006 * p.depth;
+          if (dist < 320) {
+            const force = ((320 - dist) / 320) * 0.042 * p.depth;
+            p.vx += (dx / dist) * force;
+            p.vy += (dy / dist) * force;
+          }
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.986;
+        p.vy *= 0.986;
+
+        if (p.x < -20) p.x = window.innerWidth + 20;
+        if (p.x > window.innerWidth + 20) p.x = -20;
+        if (p.y < -20) p.y = window.innerHeight + 20;
+        if (p.y > window.innerHeight + 20) p.y = -20;
+
+        const pulse = 0.78 + Math.sin(p.twinkle) * 0.22;
+        const alpha = p.alpha * pulse;
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4.5);
+        gradient.addColorStop(0, `rgba(220, 232, 248, ${alpha})`);
+        gradient.addColorStop(0.35, `rgba(175, 198, 228, ${alpha * 0.7})`);
+        gradient.addColorStop(1, 'rgba(175, 198, 228, 0)');
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient;
+        ctx.arc(p.x, p.y, p.size * 4.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(232, 240, 252, ${Math.min(alpha + 0.12, 0.68)})`;
+        ctx.arc(p.x, p.y, Math.max(p.size * 0.7, 0.8), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const a = particles[i];
+          const b = particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 185) {
+            const strength = (1 - dist / 185) * 0.22 * ((a.depth + b.depth) / 2);
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(121, 168, 255, ${strength})`;
+            ctx.lineWidth = 0.8 + ((a.depth + b.depth) / 2) * 0.45;
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('mousemove', (event) => {
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+      pointer.active = true;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      pointer.active = false;
+    });
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initParticles();
+    });
+
+    resizeCanvas();
+    initParticles();
+    drawParticles();
+
+    // Modal functionality
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-image');
+    const closeBtn = document.querySelector('.close');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    let currentIndex = 0;
+
+    document.querySelectorAll('.gallery-item').forEach((item, index) => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const imgSrc = this.querySelector('img').src;
+        modalImg.src = imgSrc;
+        currentIndex = index;
+        modal.style.opacity = '1';
+        modal.style.visibility = 'visible';
+        modalImg.style.opacity = '1';
+      });
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      const newSrc = galleryItems[currentIndex].querySelector('img').src;
+      modalImg.src = newSrc;
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % galleryItems.length;
+      const newSrc = galleryItems[currentIndex].querySelector('img').src;
+      modalImg.src = newSrc;
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.opacity = '0';
+      modalImg.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.visibility = 'hidden';
+      }, 300);
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.opacity = '0';
+        modalImg.style.opacity = '0';
+        setTimeout(() => {
+          modal.style.visibility = 'hidden';
+        }, 300);
+      }
+    });
+  </script>
+</body>
+</html>
