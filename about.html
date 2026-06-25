@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About | Qianyuan Zou</title>
   <meta name="description" content="About Qianyuan Zou, Postdoctoral Researcher in HCI, XR, and immersive design." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <style>
     :root {
       --bg: #1a1d21;
@@ -65,19 +66,15 @@
       text-decoration: none;
     }
 
+    .text-link {
+      border-bottom: 1px solid rgba(121, 168, 255, 0.5);
+      color: var(--text);
+      padding-bottom: 2px;
+    }
+
     img {
       max-width: 100%;
       display: block;
-    }
-
-    #particle-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.95;
     }
 
     .site-shell {
@@ -279,9 +276,11 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="styles/background.css" />
+  <link rel="stylesheet" href="styles/retro.css" />
 </head>
 <body>
-  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <div class="ambient-grid" aria-hidden="true"></div>
 
   <div class="site-shell">
     <div class="nav-wrap" id="navWrap">
@@ -313,7 +312,7 @@
               I am a Postdoctoral Researcher at the Immersive Design Group at the Southern University of Science and Technology (SUSTech), working on immersive interaction design and extended reality systems. I recently completed my PhD in Design at the Empathic Computing Lab at the University of Auckland, where my research focused on asymmetric input devices for 3D sketching and object editing in virtual reality.
             </p>
             <p>
-              My research spans human–computer interaction, extended reality, immersive design workflows, and accessibility in emerging technologies. I am particularly interested in how interaction techniques, input devices, and visual systems shape creative work in immersive environments, and how these systems can be designed to be more inclusive and expressive.
+              My research spans human-computer interaction, extended reality, immersive design workflows, and accessibility in emerging technologies. I am particularly interested in how interaction techniques, input devices, and visual systems shape creative work in immersive environments, and how these systems can be designed to be more inclusive and expressive.
             </p>
             <p>
               Across research, design, and visual practice, I explore how immersive systems can support creative work, inclusive interaction, and future mixed reality experiences. Beyond research, I maintain an active photography practice, which informs my thinking about framing, materiality, spatial attention, and how we perceive and represent physical and digital spaces.
@@ -329,9 +328,8 @@
           </div>
 
           <div class="intro-panel reveal">
-            <p><strong>PhD in Design</strong> — University of Auckland, New Zealand</p>
-            <p><strong>Postdoctoral Researcher</strong> — Southern University of Science and Technology, China</p>
-            <p><strong>Immersive Design Group</strong> — Research group focused on HCI, XR, and immersive systems</p>
+            <p><strong>Postdoctoral Researcher</strong> &mdash; <a class="text-link" href="https://immersivedesignresearch.com/" target="_blank" rel="noreferrer">Immersive Design Group</a>, Southern University of Science and Technology (SUSTech), China, working with Prof. Seungwoo Je</p>
+            <p><strong>PhD in Design</strong> &mdash; <a class="text-link" href="https://empathiccomputing.org/" target="_blank" rel="noreferrer">Empathic Computing Lab</a>, University of Auckland, New Zealand, supervised by Prof. Mark Billinghurst</p>
           </div>
         </div>
       </section>
@@ -339,10 +337,11 @@
 
     <footer class="footer">
       <div class="container">
-        © <span id="year"></span> Qianyuan Zou · Built for GitHub Pages
+        &copy; <span id="year"></span> Qianyuan Zou &middot; Built for GitHub Pages
       </div>
     </footer>
   </div>
+  <script src="scripts/background.js"></script>
 
   <script>
     const navWrap = document.getElementById('navWrap');
@@ -366,145 +365,6 @@
       { threshold: 0.16 }
     );
     revealItems.forEach((item) => revealObserver.observe(item));
-
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let width = 0;
-    let height = 0;
-    const particleCount = 110;
-    const particles = [];
-    const pointer = { x: 0, y: 0, active: false };
-
-    function resizeCanvas() {
-      width = canvas.width = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
-      height = canvas.height = window.innerHeight * Math.min(window.devicePixelRatio || 1, 2);
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(Math.min(window.devicePixelRatio || 1, 2), Math.min(window.devicePixelRatio || 1, 2));
-    }
-
-    function makeParticle() {
-      const depth = Math.random() * 0.9 + 0.35;
-      return {
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.22 * depth,
-        vy: (Math.random() - 0.5) * 0.22 * depth,
-        size: (Math.random() * 2 + 0.9) * depth,
-        depth,
-        alpha: Math.random() * 0.22 + 0.18,
-        twinkle: Math.random() * Math.PI * 2,
-      };
-    }
-
-    function initParticles() {
-      particles.length = 0;
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(makeParticle());
-      }
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      if (pointer.active) {
-        const glow = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 220);
-        glow.addColorStop(0, 'rgba(121, 168, 255, 0.12)');
-        glow.addColorStop(0.45, 'rgba(121, 168, 255, 0.05)');
-        glow.addColorStop(1, 'rgba(121, 168, 255, 0)');
-        ctx.beginPath();
-        ctx.fillStyle = glow;
-        ctx.arc(pointer.x, pointer.y, 220, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (const p of particles) {
-        p.twinkle += 0.012 * p.depth;
-
-        if (pointer.active) {
-          const dx = pointer.x - p.x;
-          const dy = pointer.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const fieldX = (pointer.x - window.innerWidth / 2) / window.innerWidth;
-          const fieldY = (pointer.y - window.innerHeight / 2) / window.innerHeight;
-          p.vx += fieldX * 0.006 * p.depth;
-          p.vy += fieldY * 0.006 * p.depth;
-          if (dist < 320) {
-            const force = ((320 - dist) / 320) * 0.042 * p.depth;
-            p.vx += (dx / dist) * force;
-            p.vy += (dy / dist) * force;
-          }
-        }
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.986;
-        p.vy *= 0.986;
-
-        if (p.x < -20) p.x = window.innerWidth + 20;
-        if (p.x > window.innerWidth + 20) p.x = -20;
-        if (p.y < -20) p.y = window.innerHeight + 20;
-        if (p.y > window.innerHeight + 20) p.y = -20;
-
-        const pulse = 0.78 + Math.sin(p.twinkle) * 0.22;
-        const alpha = p.alpha * pulse;
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4.5);
-        gradient.addColorStop(0, `rgba(220, 232, 248, ${alpha})`);
-        gradient.addColorStop(0.35, `rgba(175, 198, 228, ${alpha * 0.7})`);
-        gradient.addColorStop(1, 'rgba(175, 198, 228, 0)');
-
-        ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.size * 4.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(232, 240, 252, ${Math.min(alpha + 0.12, 0.68)})`;
-        ctx.arc(p.x, p.y, Math.max(p.size * 0.7, 0.8), 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 185) {
-            const strength = (1 - dist / 185) * 0.22 * ((a.depth + b.depth) / 2);
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(121, 168, 255, ${strength})`;
-            ctx.lineWidth = 0.8 + ((a.depth + b.depth) / 2) * 0.45;
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      requestAnimationFrame(drawParticles);
-    }
-
-    window.addEventListener('mousemove', (event) => {
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      pointer.active = true;
-    });
-
-    window.addEventListener('mouseleave', () => {
-      pointer.active = false;
-    });
-
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      initParticles();
-    });
-
-    resizeCanvas();
-    initParticles();
-    drawParticles();
   </script>
 </body>
 </html>

@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Photography | Qianyuan Zou</title>
   <meta name="description" content="Photography portfolio by Qianyuan Zou." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <style>
     :root {
       --bg: #1a1d21;
@@ -68,16 +69,6 @@
     img {
       max-width: 100%;
       display: block;
-    }
-
-    #particle-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.95;
     }
 
     .site-shell {
@@ -216,6 +207,65 @@
       transform: scale(1.04);
     }
 
+    .image-modal {
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.9);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .image-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 90vw;
+      max-height: 90vh;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-control {
+      position: absolute;
+      border: 0;
+      background: transparent;
+      color: #f1f1f1;
+      font: inherit;
+      font-size: 40px;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .modal-close {
+      top: 15px;
+      right: 35px;
+    }
+
+    .modal-prev,
+    .modal-next {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .modal-prev {
+      left: 15px;
+    }
+
+    .modal-next {
+      right: 15px;
+    }
+
     .footer {
       padding: 30px 0 42px;
       color: var(--muted);
@@ -262,10 +312,26 @@
         grid-template-columns: 1fr;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
   </style>
+  <link rel="stylesheet" href="styles/background.css" />
+  <link rel="stylesheet" href="styles/retro.css" />
 </head>
 <body>
-  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <div class="ambient-grid" aria-hidden="true"></div>
 
   <div class="site-shell">
     <div class="nav-wrap" id="navWrap">
@@ -296,38 +362,56 @@
           </div>
 
           <div class="gallery-grid">
-            <a class="gallery-item reveal">
-              <img src="images/hai.JPG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/new-photo-01-full.webp" data-full="images/optimized/new-photo-01-full.webp">
+              <img src="images/optimized/new-photo-01-thumb.webp" alt="Photography gallery image" width="720" height="540" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/kid.JPG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/new-photo-02-full.webp" data-full="images/optimized/new-photo-02-full.webp">
+              <img src="images/optimized/new-photo-02-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/bianjing.JPG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/new-photo-03-full.webp" data-full="images/optimized/new-photo-03-full.webp">
+              <img src="images/optimized/new-photo-03-thumb.webp" alt="Photography gallery image" width="575" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/xingkong.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/new-photo-04-full.webp" data-full="images/optimized/new-photo-04-full.webp">
+              <img src="images/optimized/new-photo-04-thumb.webp" alt="Photography gallery image" width="719" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/shan.PNG" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/new-photo-05-full.webp" data-full="images/optimized/new-photo-05-full.webp">
+              <img src="images/optimized/new-photo-05-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/jiamifeng.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/new-photo-06-full.webp" data-full="images/optimized/new-photo-06-full.webp">
+              <img src="images/optimized/new-photo-06-thumb.webp" alt="Photography gallery image" width="720" height="477" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/1.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/hai-full.webp" data-full="images/optimized/hai-full.webp">
+              <img src="images/optimized/hai-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/2.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/kid-full.webp" data-full="images/optimized/kid-full.webp">
+              <img src="images/optimized/kid-thumb.webp" alt="Photography gallery image" width="480" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/4.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/bianjing-full.webp" data-full="images/optimized/bianjing-full.webp">
+              <img src="images/optimized/bianjing-thumb.webp" alt="Photography gallery image" width="480" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/5.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/xingkong-full.webp" data-full="images/optimized/xingkong-full.webp">
+              <img src="images/optimized/xingkong-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
-            <a class="gallery-item reveal">
-              <img src="images/6.jpg" alt="Photography gallery image" onerror="this.style.display='none'" />
+            <a class="gallery-item reveal" href="images/optimized/shan-full.webp" data-full="images/optimized/shan-full.webp">
+              <img src="images/optimized/shan-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal" href="images/optimized/jiamifeng-full.webp" data-full="images/optimized/jiamifeng-full.webp">
+              <img src="images/optimized/jiamifeng-thumb.webp" alt="Photography gallery image" width="720" height="538" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal" href="images/optimized/1-full.webp" data-full="images/optimized/1-full.webp">
+              <img src="images/optimized/1-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal" href="images/optimized/2-full.webp" data-full="images/optimized/2-full.webp">
+              <img src="images/optimized/2-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal" href="images/optimized/4-full.webp" data-full="images/optimized/4-full.webp">
+              <img src="images/optimized/4-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal" href="images/optimized/5-full.webp" data-full="images/optimized/5-full.webp">
+              <img src="images/optimized/5-thumb.webp" alt="Photography gallery image" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
+            </a>
+            <a class="gallery-item reveal" href="images/optimized/6-full.webp" data-full="images/optimized/6-full.webp">
+              <img src="images/optimized/6-thumb.webp" alt="Photography gallery image" width="575" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
           </div>
         </div>
@@ -336,18 +420,19 @@
 
     <footer class="footer">
       <div class="container">
-        © <span id="year"></span> Qianyuan Zou · Built for GitHub Pages
+        &copy; <span id="year"></span> Qianyuan Zou &middot; Built for GitHub Pages
       </div>
     </footer>
   </div>
 
   <!-- Modal for full-size images -->
-  <div id="image-modal" style="display: block; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); overflow: auto; opacity: 0; visibility: hidden; transition: opacity 0.3s ease;">
-    <span class="close" style="position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
-    <span class="prev" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&lt;</span>
-    <span class="next" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&gt;</span>
-    <img id="modal-image" style="display: block; width: auto; height: auto; max-width: 90vw; max-height: 90vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: opacity 0.3s ease;">
+  <div id="image-modal" class="image-modal" role="dialog" aria-modal="true" aria-label="Photography viewer">
+    <button class="modal-control modal-close" type="button" aria-label="Close image viewer">&times;</button>
+    <button class="modal-control modal-prev" type="button" aria-label="Previous image">&lt;</button>
+    <button class="modal-control modal-next" type="button" aria-label="Next image">&gt;</button>
+    <img id="modal-image" class="modal-image" alt="Selected photography image" decoding="async">
   </div>
+  <script src="scripts/background.js"></script>
 
   <script>
     const navWrap = document.getElementById('navWrap');
@@ -372,193 +457,68 @@
     );
     revealItems.forEach((item) => revealObserver.observe(item));
 
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let width = 0;
-    let height = 0;
-    const particleCount = 110;
-    const particles = [];
-    const pointer = { x: 0, y: 0, active: false };
-
-    function resizeCanvas() {
-      width = canvas.width = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
-      height = canvas.height = window.innerHeight * Math.min(window.devicePixelRatio || 1, 2);
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(Math.min(window.devicePixelRatio || 1, 2), Math.min(window.devicePixelRatio || 1, 2));
-    }
-
-    function makeParticle() {
-      const depth = Math.random() * 0.9 + 0.35;
-      return {
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.22 * depth,
-        vy: (Math.random() - 0.5) * 0.22 * depth,
-        size: (Math.random() * 2 + 0.9) * depth,
-        depth,
-        alpha: Math.random() * 0.22 + 0.18,
-        twinkle: Math.random() * Math.PI * 2,
-      };
-    }
-
-    function initParticles() {
-      particles.length = 0;
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(makeParticle());
-      }
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      if (pointer.active) {
-        const glow = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 220);
-        glow.addColorStop(0, 'rgba(121, 168, 255, 0.12)');
-        glow.addColorStop(0.45, 'rgba(121, 168, 255, 0.05)');
-        glow.addColorStop(1, 'rgba(121, 168, 255, 0)');
-        ctx.beginPath();
-        ctx.fillStyle = glow;
-        ctx.arc(pointer.x, pointer.y, 220, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (const p of particles) {
-        p.twinkle += 0.012 * p.depth;
-
-        if (pointer.active) {
-          const dx = pointer.x - p.x;
-          const dy = pointer.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const fieldX = (pointer.x - window.innerWidth / 2) / window.innerWidth;
-          const fieldY = (pointer.y - window.innerHeight / 2) / window.innerHeight;
-          p.vx += fieldX * 0.006 * p.depth;
-          p.vy += fieldY * 0.006 * p.depth;
-          if (dist < 320) {
-            const force = ((320 - dist) / 320) * 0.042 * p.depth;
-            p.vx += (dx / dist) * force;
-            p.vy += (dy / dist) * force;
-          }
-        }
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.986;
-        p.vy *= 0.986;
-
-        if (p.x < -20) p.x = window.innerWidth + 20;
-        if (p.x > window.innerWidth + 20) p.x = -20;
-        if (p.y < -20) p.y = window.innerHeight + 20;
-        if (p.y > window.innerHeight + 20) p.y = -20;
-
-        const pulse = 0.78 + Math.sin(p.twinkle) * 0.22;
-        const alpha = p.alpha * pulse;
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4.5);
-        gradient.addColorStop(0, `rgba(220, 232, 248, ${alpha})`);
-        gradient.addColorStop(0.35, `rgba(175, 198, 228, ${alpha * 0.7})`);
-        gradient.addColorStop(1, 'rgba(175, 198, 228, 0)');
-
-        ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.size * 4.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(232, 240, 252, ${Math.min(alpha + 0.12, 0.68)})`;
-        ctx.arc(p.x, p.y, Math.max(p.size * 0.7, 0.8), 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 185) {
-            const strength = (1 - dist / 185) * 0.22 * ((a.depth + b.depth) / 2);
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(121, 168, 255, ${strength})`;
-            ctx.lineWidth = 0.8 + ((a.depth + b.depth) / 2) * 0.45;
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      requestAnimationFrame(drawParticles);
-    }
-
-    window.addEventListener('mousemove', (event) => {
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      pointer.active = true;
-    });
-
-    window.addEventListener('mouseleave', () => {
-      pointer.active = false;
-    });
-
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      initParticles();
-    });
-
-    resizeCanvas();
-    initParticles();
-    drawParticles();
-
     // Modal functionality
     const modal = document.getElementById('image-modal');
     const modalImg = document.getElementById('modal-image');
-    const closeBtn = document.querySelector('.close');
-    const prevBtn = document.querySelector('.prev');
-    const nextBtn = document.querySelector('.next');
-    const galleryItems = document.querySelectorAll('.gallery-item');
+    const closeBtn = document.querySelector('.modal-close');
+    const prevBtn = document.querySelector('.modal-prev');
+    const nextBtn = document.querySelector('.modal-next');
+    const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
     let currentIndex = 0;
 
-    document.querySelectorAll('.gallery-item').forEach((item, index) => {
-      item.addEventListener('click', function(e) {
-        e.preventDefault();
-        const imgSrc = this.querySelector('img').src;
-        modalImg.src = imgSrc;
-        currentIndex = index;
-        modal.style.opacity = '1';
-        modal.style.visibility = 'visible';
-        modalImg.style.opacity = '1';
+    function getGallerySrc(index) {
+      const item = galleryItems[index];
+      return item.dataset.full || item.href || item.querySelector('img').src;
+    }
+
+    function openModal(index) {
+      currentIndex = index;
+      modalImg.src = getGallerySrc(index);
+      modal.classList.add('open');
+      modalImg.style.opacity = '1';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modalImg.style.opacity = '0';
+    }
+
+    function showImage(index) {
+      currentIndex = (index + galleryItems.length) % galleryItems.length;
+      modalImg.src = getGallerySrc(currentIndex);
+    }
+
+    galleryItems.forEach((item, index) => {
+      item.addEventListener('click', (event) => {
+        event.preventDefault();
+        openModal(index);
       });
     });
 
     prevBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
-      const newSrc = galleryItems[currentIndex].querySelector('img').src;
-      modalImg.src = newSrc;
+      showImage(currentIndex - 1);
     });
 
     nextBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % galleryItems.length;
-      const newSrc = galleryItems[currentIndex].querySelector('img').src;
-      modalImg.src = newSrc;
+      showImage(currentIndex + 1);
     });
 
-    closeBtn.addEventListener('click', () => {
-      modal.style.opacity = '0';
-      modalImg.style.opacity = '0';
-      setTimeout(() => {
-        modal.style.visibility = 'hidden';
-      }, 300);
-    });
+    closeBtn.addEventListener('click', closeModal);
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
-        modal.style.opacity = '0';
-        modalImg.style.opacity = '0';
-        setTimeout(() => {
-          modal.style.visibility = 'hidden';
-        }, 300);
+        closeModal();
+      }
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (!modal.classList.contains('open')) return;
+      if (event.key === 'Escape') {
+        closeModal();
+      } else if (event.key === 'ArrowLeft') {
+        showImage(currentIndex - 1);
+      } else if (event.key === 'ArrowRight') {
+        showImage(currentIndex + 1);
       }
     });
   </script>

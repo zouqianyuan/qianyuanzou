@@ -1,13 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Qianyuan Zou | HCI · XR · Immersive Design</title>
+  <title>Qianyuan Zou | HCI &middot; XR &middot; Immersive Design</title>
   <meta
     name="description"
     content="Personal academic website of Qianyuan Zou, Postdoctoral Researcher in HCI, XR, and immersive design."
   />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <style>
     :root {
       --bg: #1a1d21;
@@ -73,17 +74,6 @@
       max-width: 100%;
       display: block;
     }
-
-    #particle-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.95;
-    }
-
     .site-shell {
       position: relative;
       z-index: 1;
@@ -651,29 +641,29 @@
     }
 
     .greetings-container {
+      position: relative;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 40px;
+      gap: clamp(14px, 3vw, 34px);
       flex-wrap: wrap;
+      padding-top: clamp(230px, 20vw, 270px);
+      overflow: visible;
     }
 
     .greeting {
-      font-size: 4rem;
-      font-weight: bold;
-      text-align: center;
-      color: var(--muted);
-      transition: color 0.5s ease, opacity 0.5s ease;
-      opacity: 0.3;
+      display: grid;
+      place-items: center;
+      width: clamp(124px, 18vw, 250px);
       margin: 0;
+      opacity: 0.52;
     }
 
-    .greeting.active {
-      color: var(--text);
-      opacity: 1;
-      text-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent);
-      transform: translateY(-10px);
+    .greeting img {
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
     .greetings-section {
@@ -683,10 +673,26 @@
     .intro-section {
       padding: 40px 0 88px 0;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
   </style>
+  <link rel="stylesheet" href="styles/background.css" />
+  <link rel="stylesheet" href="styles/retro.css" />
 </head>
 <body>
-  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <div class="ambient-grid" aria-hidden="true"></div>
 
   <div class="site-shell">
     <div class="nav-wrap" id="navWrap">
@@ -696,7 +702,7 @@
           <a href="#">Home</a>
           <a href="about.html">About</a>
           <a href="#research-highlights">Research</a>
-          <a href="#publications-preview">Publications</a>
+          <a href="publications.html">Publications</a>
           <a href="#selected-projects">Projects</a>
           <a href="photography.html">Photography</a>
           <a href="cv.html">CV</a>
@@ -709,17 +715,16 @@
       <section class="hero container section">
         <div class="hero-grid">
           <div class="hero-copy reveal">
-            <div class="eyebrow">XR · HCI · Designer · Researcher</div>
+            <div class="eyebrow">XR &middot; HCI &middot; Designer &middot; Researcher</div>
             <h1>Qianyuan Zou</h1>
             <p class="hero-subtitle">Researcher. Backpacker. Photographer.</p>
             <p class="hero-text">
-              Research, hiking, and photography — ways I explore systems, environments, and people.
+              Research, hiking, and photography &mdash; ways I explore systems, environments, and people.
             </p>
             <div class="hero-actions">
-              <a class="button primary" href="cv.html">View CV</a>
+              <a class="button primary" href="about.html">About me</a>
               <a class="button" href="publications.html">Publications</a>
-              <a class="button" href="projects.html">Projects</a>
-              <a class="button" href="#contact">Contact</a>
+              <a class="button" href="photography.html">Photography</a>
             </div>
             <div class="hero-meta">
               <span>Currently at SUSTech</span>
@@ -742,12 +747,36 @@
 
       <section class="section greetings-section">
         <div class="container">
-          <div class="greetings-container">
-            <div class="greeting active">你好！</div>
-            <div class="greeting">Kia Ora！</div>
-            <div class="greeting">Hello！</div>
-            <div class="greeting">こんにちは！</div>
-            <div class="greeting">안녕하세요！</div>
+          <div class="greetings-container" data-greeting-stage>
+            <div class="greeting-tooltip" id="languageTooltip" role="tooltip" aria-hidden="true">
+              <div class="greeting-tooltip__rail" aria-hidden="true"></div>
+              <div class="greeting-tooltip__meta">
+                <span>INFO</span>
+                <span>LANGUAGE TAG</span>
+              </div>
+              <h3 class="greeting-tooltip__title"></h3>
+              <p class="greeting-tooltip__body"></p>
+              <div class="greeting-tooltip__footer">
+                <span>FIELD NOTE</span>
+                <span>SIGNAL</span>
+              </div>
+            </div>
+
+            <div class="greeting" tabindex="0" aria-label="你好！" aria-describedby="languageTooltip" data-language="zh">
+              <img src="images/greetings/hello-zh.png" alt="你好！" width="2508" height="627" loading="lazy" decoding="async" />
+            </div>
+            <div class="greeting" tabindex="0" aria-label="Kia Ora!" aria-describedby="languageTooltip" data-language="kia">
+              <img src="images/greetings/kia-ora.png" alt="Kia Ora!" width="2508" height="627" loading="lazy" decoding="async" />
+            </div>
+            <div class="greeting" tabindex="0" aria-label="Hello!" aria-describedby="languageTooltip" data-language="en">
+              <img src="images/greetings/hello-en.png" alt="Hello!" width="2508" height="627" loading="lazy" decoding="async" />
+            </div>
+            <div class="greeting" tabindex="0" aria-label="こんにちは！" aria-describedby="languageTooltip" data-language="ja">
+              <img src="images/greetings/hello-ja.png" alt="こんにちは！" width="2508" height="627" loading="lazy" decoding="async" />
+            </div>
+            <div class="greeting" tabindex="0" aria-label="안녕하세요!" aria-describedby="languageTooltip" data-language="ko">
+              <img src="images/greetings/hello-ko.png" alt="안녕하세요!" width="2508" height="627" loading="lazy" decoding="async" />
+            </div>
           </div>
         </div>
       </section>
@@ -831,7 +860,7 @@
           <div class="project-stack">
             <article class="project-card reveal">
               <div class="project-image">
-                <img src="images/project-vr-sketching.png" alt="Placeholder image for asymmetric input in VR project" onerror="this.style.display='none'" />
+                <img src="images/optimized/project-vr-sketching-thumb.webp" alt="Asymmetric input for 3D sketching in VR" width="720" height="480" loading="lazy" decoding="async" onerror="this.style.display='none'" />
                
               </div>
               <div class="project-copy">
@@ -853,14 +882,14 @@
 
             <article class="project-card reveal">
               <div class="project-image">
-                <img src="images/feiyi.png" alt="Placeholder image for cultural heritage project" onerror="this.style.display='none'" />
+                <img src="images/optimized/feiyi-thumb.webp" alt="Immersive documentation for intangible cultural heritage" width="720" height="502" loading="lazy" decoding="async" onerror="this.style.display='none'" />
                 
               </div>
               <div class="project-copy">
                 <h3>Immersive Documentation for Intangible Cultural Heritage</h3>
                 <p>
-                  At the PolyU–NVIDIA Joint Research Centre, I conducted research and prototyping on spatial capture and immersive presentation for preserving craft knowledge. 
-                  This work involved collaborating with Lin Shiyuan, a national-level inheritor of the She ethnic group’s silver forging craftsmanship, to explore how 3D and XR media can make cultural practices more legible and accessible.
+                  At the PolyU&ndash;NVIDIA Joint Research Centre, I conducted research and prototyping on spatial capture and immersive presentation for preserving craft knowledge.
+                  This work involved collaborating with Lin Shiyuan, a national-level inheritor of the She ethnic group&rsquo;s silver forging craftsmanship, to explore how 3D and XR media can make cultural practices more legible and accessible.
                 </p>
                 <div class="tag-row">
                   <span class="tag">XR capture</span>
@@ -875,7 +904,7 @@
 
             <article class="project-card reveal">
               <div class="project-image">
-                <img src="images/project-acc.png" alt="Placeholder image for UX and AR project" onerror="this.style.display='none'" />
+                <img src="images/optimized/project-acc-thumb.webp" alt="Accessible interactive systems project preview" width="720" height="477" loading="lazy" decoding="async" onerror="this.style.display='none'" />
               
               </div>
               <div class="project-copy">
@@ -913,7 +942,7 @@
               <div class="pub-year">2025</div>
               <div>
                 <h3>Extendlibur: Dynamic Haptic Retargeting for Length-Mismatched Proxies in Co-Located VR</h3>
-                <div class="pub-meta">Junyu Chen, Qianyuan Zou, Yingjie Chang, Seungjae Oh, Seungwoo Je · Proceedings of the 38th Annual ACM Symposium on User Interface Software and Technology · <a href="https://dl.acm.org/doi/pdf/10.1145/3746059.3747718" target="_blank" rel="noreferrer">Link</a></div>
+                <div class="pub-meta">Junyu Chen, Qianyuan Zou, Yingjie Chang, Seungjae Oh, Seungwoo Je &middot; Proceedings of the 38th Annual ACM Symposium on User Interface Software and Technology &middot; <a href="https://dl.acm.org/doi/pdf/10.1145/3746059.3747718" target="_blank" rel="noreferrer">Link</a></div>
               </div>
             </article>
         
@@ -922,7 +951,7 @@
               <div class="pub-year">2024</div>
               <div>
                 <h3>Stylus and Gesture Asymmetric Interaction for Fast and Precise Sketching in Virtual Reality</h3>
-                <div class="pub-meta">Qianyuan Zou, Huidong Bai, Lei Gao, Gun A. Lee, Allan Fowler & Mark Billinghurst · International Journal of Human–Computer Interaction · <a href="https://doi.org/10.1080/10447318.2023.2278294" target="_blank" rel="noreferrer">https://doi.org/10.1080/10447318.2023.2278294</a></div>
+                <div class="pub-meta">Qianyuan Zou, Huidong Bai, Lei Gao, Gun A. Lee, Allan Fowler &amp; Mark Billinghurst &middot; International Journal of Human-Computer Interaction &middot; <a href="https://doi.org/10.1080/10447318.2023.2278294" target="_blank" rel="noreferrer">https://doi.org/10.1080/10447318.2023.2278294</a></div>
               </div>
             </article>
 
@@ -930,7 +959,7 @@
               <div class="pub-year">2024</div>
               <div>
                 <h3>The effect of interface types and immersive environments on drawing accuracy and user comfort</h3>
-                <div class="pub-meta">Qianyuan Zou, Huidong Bai, Zhuang Chang, Zirui Xiao, Suizi Tian, Henry Been-Lirn Duh, Allan Fowler, Mark Billinghurst · 2024 IEEE International Symposium on Mixed and Augmented Reality (ISMAR) · <a href="https://www.researchgate.net/profile/Qianyuan-Zou/publication/386264577_The_Effect_of_Interface_Types_and_Immersive_Environments_on_Drawing_Accuracy_and_User_Comfort/links/684248c1d1054b0207fa0990/The-Effect-of-Interface-Types-and-Immersive-Environments-on-Drawing-Accuracy-and-User-Comfort.pdf" target="_blank" rel="noreferrer">Link</a></div>
+                <div class="pub-meta">Qianyuan Zou, Huidong Bai, Zhuang Chang, Zirui Xiao, Suizi Tian, Henry Been-Lirn Duh, Allan Fowler, Mark Billinghurst &middot; 2024 IEEE International Symposium on Mixed and Augmented Reality (ISMAR) &middot; <a href="https://www.researchgate.net/profile/Qianyuan-Zou/publication/386264577_The_Effect_of_Interface_Types_and_Immersive_Environments_on_Drawing_Accuracy_and_User_Comfort/links/684248c1d1054b0207fa0990/The-Effect-of-Interface-Types-and-Immersive-Environments-on-Drawing-Accuracy-and-User-Comfort.pdf" target="_blank" rel="noreferrer">Link</a></div>
               </div>
             </article>
           </div>
@@ -939,7 +968,7 @@
               <div class="pub-year">2021</div>
               <div>
                 <h3>Tool-based asymmetric interaction for selection in vr</h3>
-                <div class="pub-meta">Qianyuan Zou, Huidong Bai, Yuewei Zhang, Gun Lee, Fowler Allan, Billinghurst Mark · SIGGRAPH Asia 2021 Technical Communications · <a href="https://dl.acm.org/doi/10.1145/3478512.3488615" target="_blank" rel="noreferrer">https://dl.acm.org/doi/10.1145/3478512.3488615</a></div>
+                <div class="pub-meta">Qianyuan Zou, Huidong Bai, Yuewei Zhang, Gun Lee, Fowler Allan, Billinghurst Mark &middot; SIGGRAPH Asia 2021 Technical Communications &middot; <a href="https://dl.acm.org/doi/10.1145/3478512.3488615" target="_blank" rel="noreferrer">https://dl.acm.org/doi/10.1145/3478512.3488615</a></div>
               </div>
             </article>
 
@@ -962,16 +991,16 @@
 
           <div class="gallery-grid">
             <a class="gallery-item reveal" href="photography.html" data-label="">
-              <img src="images/bianjing.JPG" alt="Photography placeholder one" onerror="this.style.display='none'" />
+              <img src="images/optimized/bianjing-thumb.webp" alt="Photography preview" width="480" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
             <a class="gallery-item reveal" href="photography.html" data-label="">
-              <img src="images/hai.JPG" alt="Photography placeholder two" onerror="this.style.display='none'" />
+              <img src="images/optimized/hai-thumb.webp" alt="Photography preview" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
             <a class="gallery-item reveal" href="photography.html" data-label="">
-              <img src="images/shan.PNG" alt="Photography placeholder three" onerror="this.style.display='none'" />
+              <img src="images/optimized/shan-thumb.webp" alt="Photography preview" width="720" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
             <a class="gallery-item reveal" href="photography.html" data-label="">
-              <img src="images/kid.JPG" alt="Photography placeholder four" onerror="this.style.display='none'" />
+              <img src="images/optimized/kid-thumb.webp" alt="Photography preview" width="480" height="720" loading="lazy" decoding="async" onerror="this.style.display='none'" />
             </a>
           </div>
         </div>
@@ -982,7 +1011,7 @@
           <div class="contact-card reveal">
             <div>
               <div class="eyebrow">Contact</div>
-              <h2 class="section-title" style="margin-bottom: 12px;">Let’s connect</h2>
+              <h2 class="section-title" style="margin-bottom: 12px;">Let&rsquo;s connect</h2>
               <p class="section-intro" style="margin-bottom: 0;">
                 
               </p>
@@ -991,7 +1020,7 @@
               <div>Email: <a href="mailto:zouqianyuan@gmail.com">zouqianyuan@gmail.com</a></div>
               <div>LinkedIn: <a href="https://www.linkedin.com/in/qianyuan-zou-b7aa45235/" target="_blank" rel="noreferrer">Profile</a></div>
               <div>Google Scholar: <a href="https://scholar.google.com/citations?user=62nkU14AAAAJ&hl=zh-CN" target="_blank" rel="noreferrer">Profile</a></div>
-              <div>Institutional Profile: <a href="https://immersivedesignresearch.com/" target="_blank" rel="noreferrer">Immersive Design Research</a></div>
+              <div>Institutional Profile: <a href="https://immersivedesignresearch.com/" target="_blank" rel="noreferrer">Immersive Design Group</a></div>
             </div>
           </div>
         </div>
@@ -1000,10 +1029,11 @@
 
     <footer class="footer">
       <div class="container">
-        © <span id="year"></span> Qianyuan Zou · Built for GitHub Pages
+        &copy; <span id="year"></span> Qianyuan Zou &middot; Built for GitHub Pages
       </div>
     </footer>
   </div>
+  <script src="scripts/background.js"></script>
 
   <script>
     const navWrap = document.getElementById('navWrap');
@@ -1028,162 +1058,89 @@
     );
     revealItems.forEach((item) => revealObserver.observe(item));
 
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let width = 0;
-    let height = 0;
-    const particleCount = 110;
-    const particles = [];
-    const pointer = { x: 0, y: 0, active: false };
+    const greetingNotes = {
+      zh: {
+        title: 'ORIGIN',
+        body: 'I was born in China. This is where my story, language, and cultural background begin.',
+      },
+      kia: {
+        title: 'AOTEAROA / NEW ZEALAND/ Research & Life',
+        body: 'I completed my Master\u2019s and PhD in New Zealand, where my research identity and creative direction were shaped.',
+      },
+      en: {
+        title: 'AOTEAROA / NEW ZEALAND/ Research & Life',
+        body: 'I completed my Master\u2019s and PhD in New Zealand, where my research identity and creative direction were shaped.',
+      },
+      ja: {
+        title: 'JAPAN / VISUAL CULTURE',
+        body: 'I have long been drawn to Japanese photography, animation, and literature. They continue to influence my visual taste and imagination.',
+      },
+      ko: {
+        title: 'KOREA / NEW LANGUAGE',
+        body: 'I am currently working with a Korean professor. Learning a new language always makes me excited.',
+      },
+    };
 
-    function resizeCanvas() {
-      width = canvas.width = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
-      height = canvas.height = window.innerHeight * Math.min(window.devicePixelRatio || 1, 2);
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(Math.min(window.devicePixelRatio || 1, 2), Math.min(window.devicePixelRatio || 1, 2));
+    const greetingStage = document.querySelector('[data-greeting-stage]');
+    const languageTooltip = document.getElementById('languageTooltip');
+    const languageTooltipTitle = languageTooltip.querySelector('.greeting-tooltip__title');
+    const languageTooltipBody = languageTooltip.querySelector('.greeting-tooltip__body');
+    let activeGreeting = null;
+
+    function positionLanguageTooltip(target) {
+      const stageRect = greetingStage.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const tooltipRect = languageTooltip.getBoundingClientRect();
+      const margin = 12;
+      const centeredLeft = targetRect.left - stageRect.left + targetRect.width / 2;
+      const minLeft = tooltipRect.width / 2 + margin;
+      const maxLeft = stageRect.width - tooltipRect.width / 2 - margin;
+      const left = Math.min(Math.max(centeredLeft, minLeft), Math.max(minLeft, maxLeft));
+      const aboveTop = targetRect.top - stageRect.top - tooltipRect.height - 24;
+      const shouldPlaceBelow = window.matchMedia('(max-width: 720px)').matches || aboveTop < 6;
+      const top = shouldPlaceBelow
+        ? targetRect.bottom - stageRect.top + 18
+        : aboveTop;
+
+      languageTooltip.style.left = `${left}px`;
+      languageTooltip.style.top = `${top}px`;
+      languageTooltip.classList.toggle('is-below', shouldPlaceBelow);
     }
 
-    function makeParticle() {
-      const depth = Math.random() * 0.9 + 0.35;
-      return {
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.22 * depth,
-        vy: (Math.random() - 0.5) * 0.22 * depth,
-        size: (Math.random() * 2 + 0.9) * depth,
-        depth,
-        alpha: Math.random() * 0.22 + 0.18,
-        twinkle: Math.random() * Math.PI * 2,
-      };
+    function showLanguageTooltip(target) {
+      const note = greetingNotes[target.dataset.language];
+      if (!note) return;
+
+      activeGreeting = target;
+      languageTooltipTitle.textContent = note.title;
+      languageTooltipBody.textContent = note.body;
+      languageTooltip.classList.add('is-visible');
+      languageTooltip.setAttribute('aria-hidden', 'false');
+      window.requestAnimationFrame(() => positionLanguageTooltip(target));
     }
 
-    function initParticles() {
-      particles.length = 0;
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(makeParticle());
-      }
+    function hideLanguageTooltip(target) {
+      if (target && activeGreeting !== target) return;
+      activeGreeting = null;
+      languageTooltip.classList.remove('is-visible', 'is-below');
+      languageTooltip.setAttribute('aria-hidden', 'true');
     }
 
-    function drawParticles() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      if (pointer.active) {
-        const glow = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 220);
-        glow.addColorStop(0, 'rgba(121, 168, 255, 0.12)');
-        glow.addColorStop(0.45, 'rgba(121, 168, 255, 0.05)');
-        glow.addColorStop(1, 'rgba(121, 168, 255, 0)');
-        ctx.beginPath();
-        ctx.fillStyle = glow;
-        ctx.arc(pointer.x, pointer.y, 220, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (const p of particles) {
-        p.twinkle += 0.012 * p.depth;
-
-        if (pointer.active) {
-          const dx = pointer.x - p.x;
-          const dy = pointer.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const fieldX = (pointer.x - window.innerWidth / 2) / window.innerWidth;
-          const fieldY = (pointer.y - window.innerHeight / 2) / window.innerHeight;
-          p.vx += fieldX * 0.006 * p.depth;
-          p.vy += fieldY * 0.006 * p.depth;
-          if (dist < 320) {
-            const force = ((320 - dist) / 320) * 0.042 * p.depth;
-            p.vx += (dx / dist) * force;
-            p.vy += (dy / dist) * force;
-          }
+    document.querySelectorAll('.greeting[data-language]').forEach((greeting) => {
+      greeting.addEventListener('mouseenter', () => showLanguageTooltip(greeting));
+      greeting.addEventListener('focus', () => showLanguageTooltip(greeting));
+      greeting.addEventListener('mouseleave', () => hideLanguageTooltip(greeting));
+      greeting.addEventListener('blur', () => hideLanguageTooltip(greeting));
+      greeting.addEventListener('pointerdown', () => {
+        if (window.matchMedia('(hover: none)').matches) {
+          greeting.focus({ preventScroll: true });
+          showLanguageTooltip(greeting);
         }
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.986;
-        p.vy *= 0.986;
-
-        if (p.x < -20) p.x = window.innerWidth + 20;
-        if (p.x > window.innerWidth + 20) p.x = -20;
-        if (p.y < -20) p.y = window.innerHeight + 20;
-        if (p.y > window.innerHeight + 20) p.y = -20;
-
-        const pulse = 0.78 + Math.sin(p.twinkle) * 0.22;
-        const alpha = p.alpha * pulse;
-        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4.5);
-        gradient.addColorStop(0, `rgba(220, 232, 248, ${alpha})`);
-        gradient.addColorStop(0.35, `rgba(175, 198, 228, ${alpha * 0.7})`);
-        gradient.addColorStop(1, 'rgba(175, 198, 228, 0)');
-
-        ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.size * 4.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(232, 240, 252, ${Math.min(alpha + 0.12, 0.68)})`;
-        ctx.arc(p.x, p.y, Math.max(p.size * 0.7, 0.8), 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 185) {
-            const strength = (1 - dist / 185) * 0.22 * ((a.depth + b.depth) / 2);
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(121, 168, 255, ${strength})`;
-            ctx.lineWidth = 0.8 + ((a.depth + b.depth) / 2) * 0.45;
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      requestAnimationFrame(drawParticles);
-    }
-
-    window.addEventListener('mousemove', (event) => {
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      pointer.active = true;
-    });
-
-    window.addEventListener('mouseleave', () => {
-      pointer.active = false;
+      });
     });
 
     window.addEventListener('resize', () => {
-      resizeCanvas();
-      initParticles();
-    });
-
-    resizeCanvas();
-    initParticles();
-    drawParticles();
-
-    const greetingsContainer = document.querySelector('.greetings-container');
-    const greetings = greetingsContainer.querySelectorAll('.greeting');
-    let currentIndex = 0;
-    window.addEventListener('scroll', () => {
-      const rect = greetingsContainer.getBoundingClientRect();
-      const containerTop = rect.top;
-      const containerHeight = rect.height;
-      const windowHeight = window.innerHeight;
-      if (containerTop < windowHeight && containerTop + containerHeight > 0) {
-        const progress = (windowHeight - containerTop) / (windowHeight + containerHeight);
-        const newIndex = Math.floor(progress * 5);
-        if (newIndex !== currentIndex && newIndex >= 0 && newIndex < 5) {
-          greetings[currentIndex].classList.remove('active');
-          greetings[newIndex].classList.add('active');
-          currentIndex = newIndex;
-        }
-      }
+      if (activeGreeting) positionLanguageTooltip(activeGreeting);
     });
 
   </script>

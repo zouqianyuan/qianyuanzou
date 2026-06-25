@@ -1,0 +1,100 @@
+.ambient-grid {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  max-width: 100vw;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  contain: paint;
+  background:
+    repeating-linear-gradient(0deg, rgba(86, 225, 231, 0.035) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(90deg, rgba(86, 225, 231, 0.03) 0 1px, transparent 1px 8px),
+    #090d14;
+}
+
+.ambient-grid::before,
+.ambient-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.ambient-grid::before {
+  background-image:
+    linear-gradient(rgba(86, 225, 231, 0.13) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(86, 225, 231, 0.13) 2px, transparent 2px),
+    linear-gradient(rgba(242, 240, 230, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 240, 230, 0.055) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 16px 16px, 16px 16px;
+  opacity: 0.5;
+  animation: none;
+}
+
+.ambient-grid::after {
+  background:
+    repeating-linear-gradient(45deg, rgba(242, 240, 230, 0.03) 0 2px, transparent 2px 6px),
+    linear-gradient(90deg, rgba(9, 13, 20, 0.78), transparent 22%, transparent 78%, rgba(9, 13, 20, 0.78));
+  opacity: 0.68;
+}
+
+.ambient-bit {
+  position: absolute;
+  color: rgba(86, 225, 231, 0.22);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.66rem;
+  line-height: 1;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  animation: none;
+  text-shadow: none;
+}
+
+body {
+  background: #10151d !important;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  display: none !important;
+}
+
+#particle-canvas,
+#grid-bg {
+  display: none !important;
+}
+
+@keyframes ambientGridDrift {
+  from {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+
+  to {
+    background-position: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  }
+}
+
+@keyframes ambientBitPulse {
+  0%,
+  100% {
+    opacity: 0.08;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+
+  42% {
+    opacity: 0.34;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-grid::before,
+  .ambient-bit {
+    animation: none;
+  }
+
+  .ambient-bit {
+    opacity: 0.22;
+  }
+}
