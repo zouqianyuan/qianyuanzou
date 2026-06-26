@@ -308,14 +308,6 @@
       background: linear-gradient(180deg, rgba(0,0,0,0) 22%, rgba(0,0,0,0.55) 100%);
     }
 
-    .portrait-note {
-      position: relative;
-      z-index: 1;
-      font-size: 0.92rem;
-      color: rgba(255,255,255,0.85);
-      max-width: 240px;
-    }
-
     .intro-panel {
       background: var(--bg-card);
       border: 1px solid var(--line);
@@ -727,18 +719,56 @@
               <a class="button" href="photography.html">Photography</a>
             </div>
             <div class="hero-meta">
-              <span>Currently at SUSTech</span>
-              <span>PhD, University of Auckland</span>
-              <a href="https://immersivedesignresearch.com/" target="_blank" rel="noreferrer" style="text-decoration: underline;">Immersive Design Group</a>
+              <span>Postdoc at <a href="https://immersivedesignresearch.com/" target="_blank" rel="noreferrer" style="text-decoration: underline;">Immersive Design Group</a>, SUSTech</span>
+              <span>PhD in Design at <a href="https://empathiccomputing.org/" target="_blank" rel="noreferrer" style="text-decoration: underline;">Empathic Computing Lab</a>, University of Auckland</span>
             </div>
           </div>
 
           <div class="hero-card reveal">
             <div class="hero-visual">
-              <div class="portrait-placeholder">
-                <div class="portrait-note">
-
+              <div class="portrait-placeholder transformation-shell" data-transformer tabindex="0" aria-label="Portrait transformation preview">
+                <div class="transform-stage" aria-hidden="true">
+                  <img class="transform-sprite transform-sprite--pre" src="images/character/pre-transform.png" alt="" width="1086" height="1448" loading="lazy" decoding="async" />
+                  <img class="transform-sprite transform-sprite--post" src="images/character/hero-transform.png" alt="" width="1086" height="1448" loading="lazy" decoding="async" />
+                  <img class="transform-silhouette" src="images/character/pre-transform.png" alt="" width="1086" height="1448" loading="lazy" decoding="async" />
+                  <div class="transform-particles">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="transform-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="transform-armor">
+                    <span class="armor-piece armor-helmet"></span>
+                    <span class="armor-piece armor-visor"></span>
+                    <span class="armor-piece armor-core"></span>
+                    <span class="armor-piece armor-belt"></span>
+                    <span class="armor-piece armor-left"></span>
+                    <span class="armor-piece armor-right"></span>
+                    <span class="armor-piece armor-streak armor-streak--cyan"></span>
+                    <span class="armor-piece armor-streak armor-streak--magenta"></span>
+                  </div>
+                  <div class="transform-scan"></div>
+                  <div class="transform-burst"></div>
+                  <div class="transform-flash"></div>
+                  <div class="transform-impact"></div>
                 </div>
+                <button class="transform-trigger" type="button" aria-pressed="false">Henshin</button>
               </div>
             </div>
           </div>
@@ -892,9 +922,9 @@
                   This work involved collaborating with Lin Shiyuan, a national-level inheritor of the She ethnic group&rsquo;s silver forging craftsmanship, to explore how 3D and XR media can make cultural practices more legible and accessible.
                 </p>
                 <div class="tag-row">
-                  <span class="tag">XR capture</span>
-                  <span class="tag">Point clouds</span>
-                  <span class="tag">Heritage</span>
+                  <span class="tag">XR Interaction</span>
+                  <span class="tag">Point Clouds</span>
+                  <span class="tag">Cultural Heritage</span>
                 </div>
                 <div style="margin-top: 18px;">
                
@@ -914,9 +944,9 @@
                   From VR drawing tools for people with Parkinson's to context-aware AI for ageing in place, this work investigates how technology can support expression, dignity, and independence.
                 </p>
                 <div class="tag-row">
-                  <span class="tag">UX design</span>
-                  <span class="tag">Mobile AR</span>
-                  <span class="tag">Prototyping</span>
+                  <span class="tag">HCI</span>
+                  <span class="tag">Accessibility</span>
+                  <span class="tag">Aging Care</span>
                 </div>
                 <div style="margin-top: 18px;">
                   <!-- <a class="project-link" href="projects.html">View project</a> -->
@@ -1057,6 +1087,104 @@
       { threshold: 0.16 }
     );
     revealItems.forEach((item) => revealObserver.observe(item));
+
+    const transformerMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const transformerTimers = new WeakMap();
+
+    function clearTransformerTimer(shell) {
+      const timer = transformerTimers.get(shell);
+      if (timer) {
+        window.clearTimeout(timer);
+        transformerTimers.delete(shell);
+      }
+    }
+
+    function setTransformerButton(shell, isPressed) {
+      const trigger = shell.querySelector('.transform-trigger');
+      if (!trigger) return;
+      trigger.setAttribute('aria-pressed', String(isPressed));
+      trigger.textContent = isPressed ? 'Reset' : 'Henshin';
+    }
+
+    function activateTransformer(shell, options = {}) {
+      const { lock = false, restart = false } = options;
+      clearTransformerTimer(shell);
+
+      if (restart) {
+        shell.classList.remove('is-active', 'is-transforming', 'is-hero');
+        shell.offsetHeight;
+      }
+
+      if (lock) {
+        shell.classList.add('is-locked');
+        setTransformerButton(shell, true);
+      }
+
+      shell.classList.add('is-active');
+
+      if (transformerMotionQuery.matches) {
+        shell.classList.add('is-hero');
+        shell.classList.remove('is-transforming');
+        return;
+      }
+
+      shell.classList.add('is-transforming');
+      const timer = window.setTimeout(() => {
+        shell.classList.remove('is-transforming');
+        shell.classList.add('is-hero');
+        transformerTimers.delete(shell);
+      }, 2160);
+      transformerTimers.set(shell, timer);
+    }
+
+    function resetTransformer(shell, options = {}) {
+      const { force = false } = options;
+      if (!force && shell.classList.contains('is-locked')) return;
+      clearTransformerTimer(shell);
+      shell.classList.remove('is-active', 'is-transforming', 'is-hero', 'is-locked');
+      setTransformerButton(shell, false);
+    }
+
+    document.querySelectorAll('[data-transformer]').forEach((shell) => {
+      shell.addEventListener('pointerenter', () => {
+        if (!shell.classList.contains('is-locked')) {
+          activateTransformer(shell, { restart: true });
+        }
+      });
+
+      shell.addEventListener('pointerleave', () => resetTransformer(shell));
+
+      shell.addEventListener('focusin', () => {
+        if (!shell.classList.contains('is-locked')) {
+          activateTransformer(shell, { restart: true });
+        }
+      });
+
+      shell.addEventListener('focusout', (event) => {
+        if (!shell.contains(event.relatedTarget)) {
+          resetTransformer(shell);
+        }
+      });
+
+      shell.addEventListener('click', (event) => {
+        if (event.target.closest('.transform-trigger')) return;
+        if (shell.classList.contains('is-locked')) {
+          resetTransformer(shell, { force: true });
+        } else {
+          activateTransformer(shell, { lock: true, restart: true });
+        }
+      });
+
+      const trigger = shell.querySelector('.transform-trigger');
+      trigger?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        if (shell.classList.contains('is-locked')) {
+          resetTransformer(shell, { force: true });
+        } else {
+          activateTransformer(shell, { lock: true, restart: true });
+        }
+      });
+    });
 
     const greetingNotes = {
       zh: {
