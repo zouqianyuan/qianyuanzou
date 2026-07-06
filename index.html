@@ -689,7 +689,13 @@
   <div class="site-shell">
     <div class="nav-wrap" id="navWrap">
       <nav class="nav">
-        <a href="#" class="brand">Qianyuan Zou</a>
+        <a href="#" class="brand" aria-label="Qianyuan Zou, callsign Zac">
+          <span class="brand-status" aria-hidden="true"></span>
+          <span class="brand-copy">
+            <span class="brand-name">Qianyuan Zou</span>
+            <span class="brand-callsign">CALLSIGN: ZAC</span>
+          </span>
+        </a>
         <div class="nav-links">
           <a href="#">Home</a>
           <a href="about.html">About</a>
@@ -726,7 +732,7 @@
 
           <div class="hero-card reveal">
             <div class="hero-visual">
-              <div class="portrait-placeholder transformation-shell" data-transformer tabindex="0" aria-label="Portrait transformation preview">
+              <div class="portrait-placeholder transformation-shell" data-transformer data-tilt-card>
                 <div class="transform-stage" aria-hidden="true">
                   <img class="transform-sprite transform-sprite--pre" src="images/character/pre-transform.png" alt="" width="1086" height="1448" loading="lazy" decoding="async" />
                   <img class="transform-sprite transform-sprite--post" src="images/character/hero-transform.png" alt="" width="1086" height="1448" loading="lazy" decoding="async" />
@@ -767,6 +773,17 @@
                   <div class="transform-burst"></div>
                   <div class="transform-flash"></div>
                   <div class="transform-impact"></div>
+                </div>
+                <div class="tilt-foil" aria-hidden="true"></div>
+                <div class="tilt-shine" aria-hidden="true"></div>
+                <div class="tilt-sparkles" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </div>
                 <button class="transform-trigger" type="button" aria-pressed="false">Henshin</button>
               </div>
@@ -1146,35 +1163,6 @@
     }
 
     document.querySelectorAll('[data-transformer]').forEach((shell) => {
-      shell.addEventListener('pointerenter', () => {
-        if (!shell.classList.contains('is-locked')) {
-          activateTransformer(shell, { restart: true });
-        }
-      });
-
-      shell.addEventListener('pointerleave', () => resetTransformer(shell));
-
-      shell.addEventListener('focusin', () => {
-        if (!shell.classList.contains('is-locked')) {
-          activateTransformer(shell, { restart: true });
-        }
-      });
-
-      shell.addEventListener('focusout', (event) => {
-        if (!shell.contains(event.relatedTarget)) {
-          resetTransformer(shell);
-        }
-      });
-
-      shell.addEventListener('click', (event) => {
-        if (event.target.closest('.transform-trigger')) return;
-        if (shell.classList.contains('is-locked')) {
-          resetTransformer(shell, { force: true });
-        } else {
-          activateTransformer(shell, { lock: true, restart: true });
-        }
-      });
-
       const trigger = shell.querySelector('.transform-trigger');
       trigger?.addEventListener('click', (event) => {
         event.stopPropagation();
@@ -1184,6 +1172,46 @@
           activateTransformer(shell, { lock: true, restart: true });
         }
       });
+    });
+
+    const tiltPointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+    document.querySelectorAll('[data-tilt-card]').forEach((card) => {
+      if (!tiltPointerQuery.matches || transformerMotionQuery.matches) return;
+
+      const resetTilt = () => {
+        card.classList.remove('is-tilting');
+        card.style.setProperty('--rotate-x', '0deg');
+        card.style.setProperty('--rotate-y', '0deg');
+        card.style.setProperty('--mouse-x', '50%');
+        card.style.setProperty('--mouse-y', '50%');
+      };
+
+      card.addEventListener('pointerenter', (event) => {
+        if (event.pointerType === 'touch') return;
+        card.classList.add('is-tilting');
+      });
+
+      card.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch') return;
+        card.classList.add('is-tilting');
+        const rect = card.getBoundingClientRect();
+        const x = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+        const y = Math.min(Math.max((event.clientY - rect.top) / rect.height, 0), 1);
+        card.style.setProperty('--rotate-x', `${(0.5 - y) * 10}deg`);
+        card.style.setProperty('--rotate-y', `${(x - 0.5) * 10}deg`);
+        card.style.setProperty('--mouse-x', `${x * 100}%`);
+        card.style.setProperty('--mouse-y', `${y * 100}%`);
+      });
+
+      card.addEventListener('pointerleave', resetTilt);
+      card.addEventListener('pointercancel', resetTilt);
+      card.addEventListener('mouseleave', resetTilt);
+      document.addEventListener('pointermove', (event) => {
+        if (card.classList.contains('is-tilting') && !card.contains(event.target)) {
+          resetTilt();
+        }
+      }, { passive: true });
     });
 
     const greetingNotes = {
