@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zouqianyuan.github.io/qianyuanzou/sitemap.xml
